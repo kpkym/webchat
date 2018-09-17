@@ -14,7 +14,7 @@ import java.io.IOException;
  * @Description
  */
 @Slf4j
-@ServerEndpoint(value = "/chat", configurator = GetHttpSessionConfigurator.class)
+@ServerEndpoint(value = "/webchat", configurator = GetHttpSessionConfigurator.class)
 public class WebChatWebsocket {
     private Session wsSession;
     private HttpSession httpSession;

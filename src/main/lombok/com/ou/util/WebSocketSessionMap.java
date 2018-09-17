@@ -55,7 +55,6 @@ public class WebSocketSessionMap {
             // 通知非当前对象
             if (!next.getKey().equals(httpSession)) {
                 next.getValue().getBasicRemote().sendText(msg);
-                next.getValue().getBasicRemote().sendText(msg);
             }
         }
         log.info("发送用户" + httpSession + "===>消息: " + msg + ". 成功");
