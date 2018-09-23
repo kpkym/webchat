@@ -8,11 +8,7 @@ import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
-/**
- * @author kpkym
- * @date 2018-09-15 23:14
- * @Description
- */
+
 @Slf4j
 @ServerEndpoint(value = "/webchat", configurator = GetHttpSessionConfigurator.class)
 public class WebChatWebsocket {
