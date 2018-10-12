@@ -13,7 +13,7 @@
 
     <properties>
         <junit.version>4.12</junit.version>
-        <spring.version>4.3.13.RELEASE</spring.version>
+        <spring.version>5.1.0.RELEASE</spring.version>
         <standard.version>1.1.2</standard.version>
         <slf4j.version>1.6.4</slf4j.version>
         <jackson.version>2.9.0</jackson.version>
@@ -22,6 +22,8 @@
         <el.version>2.2.4</el.version>
         <lombok.version>1.18.0</lombok.version>
         <websocket.version>1.1</websocket.version>
+        <jsp-api.version>2.3.1</jsp-api.version>
+        <fastjson.version>1.2.49</fastjson.version>
     </properties>
 
     <dependencies>
@@ -84,6 +86,17 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>${jsp-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
         </dependency>
     </dependencies>
 

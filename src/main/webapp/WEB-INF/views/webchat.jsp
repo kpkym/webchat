@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Title</title>
-    <link rel="stylesheet" href="/static/bootstrap-4.1.3/css/bootstrap.css"/>
+    <%@ include file="/component/bootcss.jsp"%>
 </head>
 <body>
 
@@ -30,11 +30,10 @@
 
 </div>
 
-<script src="/static/jquery/jquery-3.3.1.js"></script>
-<script src="/static/bootstrap-4.1.3/js/bootstrap.js"></script>
+<%@ include file="/component/bootjs_jquery.jsp"%>
 <script>
     let chatArea = $("#chatArea");
-    let ws = new WebSocket("ws://" + location.host + "/webchat");
+    let ws = new WebSocket("ws://" + location.host + APP_PATH + "/webchat");
     let msgBtn = $("#msgBtn");
 
     ws.onmessage = function (event) {

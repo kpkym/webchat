@@ -1,8 +1,10 @@
 package com.ou.util;
 
+import com.ou.bean.Message;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpSession;
+import javax.websocket.EncodeException;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.util.Collections;
@@ -48,15 +50,15 @@ public class WebSocketSessionMap {
         sessions.remove(httpSession);
     }
 
-    public void sentMessage(String msg, HttpSession httpSession) throws IOException {
+    public void sentMessage(Message message, HttpSession httpSession) throws IOException, EncodeException {
         Iterator<Map.Entry<HttpSession, Session>> iterator = this.sessions.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<HttpSession, Session> next = iterator.next();
             // 通知非当前对象
             if (!next.getKey().equals(httpSession)) {
-                next.getValue().getBasicRemote().sendText(msg);
+                next.getValue().getBasicRemote().sendObject(message);
             }
         }
-        log.info("发送用户" + httpSession + "===>消息: " + msg + ". 成功");
+        log.info("发送用户" + httpSession + "===>消息: " + message + ". 成功");
     }
 }

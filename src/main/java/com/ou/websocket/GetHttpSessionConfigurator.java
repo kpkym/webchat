@@ -11,6 +11,7 @@ import javax.websocket.server.ServerEndpointConfig;
  * @Description:
  */
 public class GetHttpSessionConfigurator extends ServerEndpointConfig.Configurator {
+    // fixme 由于切换账号时 session 不会变 所以需要修改此处, key 设置为识别账号唯一标示符
     @Override
     public void modifyHandshake(ServerEndpointConfig config, HandshakeRequest request, HandshakeResponse response) {
         HttpSession httpSession = (HttpSession) request.getHttpSession();
