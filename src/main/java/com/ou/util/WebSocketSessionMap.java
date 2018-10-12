@@ -1,10 +1,9 @@
 package com.ou.util;
 
+import com.alibaba.fastjson.JSON;
 import com.ou.bean.Message;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpSession;
-import javax.websocket.EncodeException;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.util.Collections;
@@ -21,7 +20,7 @@ import java.util.Map;
 @Slf4j
 public class WebSocketSessionMap {
     private static WebSocketSessionMap webSocketSessionMap = new WebSocketSessionMap();
-    private Map<HttpSession, Session> sessions = Collections.synchronizedMap(new HashMap<>());
+    private Map<Object, Session> sessions = Collections.synchronizedMap(new HashMap<>());
 
     private WebSocketSessionMap(){}
 
@@ -38,27 +37,24 @@ public class WebSocketSessionMap {
      * 添加 session
      * @param wsSession
      */
-    public void addSession(HttpSession httpSession, Session wsSession) {
-        sessions.put(httpSession, wsSession);
+    public void addSession(Object uid, Session wsSession) {
+        sessions.put(uid, wsSession);
     }
 
     /**
      * 删除 session
-     * @param httpSession
+     * @param uid
      */
-    public void delSession(HttpSession httpSession) {
-        sessions.remove(httpSession);
+    public void delSession(Object uid) {
+        sessions.remove(uid);
     }
 
-    public void sentMessage(Message message, HttpSession httpSession) throws IOException, EncodeException {
-        Iterator<Map.Entry<HttpSession, Session>> iterator = this.sessions.entrySet().iterator();
+    public void sentMessage(Message message, Object uid) throws IOException {
+        Iterator<Map.Entry<Object, Session>> iterator = this.sessions.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<HttpSession, Session> next = iterator.next();
-            // 通知非当前对象
-            if (!next.getKey().equals(httpSession)) {
-                next.getValue().getBasicRemote().sendObject(message);
-            }
+            Map.Entry<Object, Session> next = iterator.next();
+            next.getValue().getBasicRemote().sendText(JSON.toJSONString(message));
         }
-        log.info("发送用户" + httpSession + "===>消息: " + message + ". 成功");
+        log.info("发送用户" + uid + "===>消息: " + message + ". 成功");
     }
 }

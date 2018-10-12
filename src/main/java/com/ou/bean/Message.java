@@ -11,9 +11,10 @@ import java.util.Date;
  * Date: 2018-10-12 13:48
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Message {
+    private Object uid;
     private String msg;
     private Date date;
 }

@@ -12,30 +12,31 @@ import java.util.Date;
 
 
 @Slf4j
-@ServerEndpoint(value = "/webchat", configurator = GetHttpSessionConfigurator.class, encoders = MessageEncoder.class)
+@ServerEndpoint(value = "/webchat", configurator = GetHttpSessionConfigurator.class)
 public class WebChatWebsocket {
     private Session wsSession;
-    private HttpSession httpSession;
+    private Object uid;
 
     @OnOpen
     public void open(Session session, EndpointConfig config) {
         this.wsSession = session;
-        this.httpSession = (HttpSession) config.getUserProperties()
+        HttpSession httpSession = (HttpSession) config.getUserProperties()
                 .get(HttpSession.class.getName());
-        WebSocketSessionMap.getWebSocketSessionMap().addSession(this.httpSession, this.wsSession);
-        log.info("用户: " + this.httpSession + ". 建立了一个连接. wsSession id: " + this.wsSession.getId());
+        this.uid = httpSession.getAttribute("uid");
+        WebSocketSessionMap.getWebSocketSessionMap().addSession(this.uid, this.wsSession);
+        log.info("用户: " + this.uid + ". 建立了一个连接. wsSession id: " + this.wsSession.getId());
     }
 
     @OnMessage
-    public void message(String msg) throws IOException, EncodeException {
-        log.info("接受用户" + this.httpSession + "===>消息: " + msg);
-        Message message = new Message(msg, new Date());
-        WebSocketSessionMap.getWebSocketSessionMap().sentMessage(message, this.httpSession);
+    public void message(String msg) throws IOException {
+        Message message = new Message(this.uid, msg, new Date());
+        WebSocketSessionMap.getWebSocketSessionMap().sentMessage(message, this.uid);
+        log.info("接受用户" + this.uid + "===>消息: " + msg);
     }
 
     @OnClose
     public void close() {
-        WebSocketSessionMap.getWebSocketSessionMap().delSession(this.httpSession);
-        log.info("用户: " + this.httpSession + ". 断开了连接. wsSession id: " + this.wsSession.getId());
+        WebSocketSessionMap.getWebSocketSessionMap().delSession(this.uid);
+        log.info("用户: " + this.uid + ". 断开了连接. wsSession id: " + this.wsSession.getId());
     }
 }
