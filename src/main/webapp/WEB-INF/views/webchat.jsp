@@ -3,6 +3,12 @@
 <head>
     <title>Title</title>
     <%@ include file="/component/bootcss.jsp" %>
+    <style>
+        .alert-auto {
+            display: inline-block;
+            margin: 0.2em;
+        }
+    </style>
 </head>
 <body>
 
@@ -58,6 +64,7 @@
     // 如果不是自己发送的消息，文字就在左边，否则浮动到右边
     function putMsg(msg) {
         let date = new Date(msg.date);
+        let wrapDiv = $("<div></div>");
         let contentArea = $("<p class='alert msg alert-auto' data-toggle='tooltip' data-placement='top'></p>");
 
         let formateDate = date.getFullYear() + "-"
@@ -70,12 +77,13 @@
 
         if (msg.uid === ${uid}) {
             contentArea.addClass("alert-primary text-sm-right");
+            wrapDiv.css("text-align", "right");
         } else {
             contentArea.addClass("alert-success");
         }
 
         contentArea.text(msg.msg);
-        contentArea.appendTo(chatArea);
+        wrapDiv.append(contentArea).append("<br>").appendTo($(chatArea));
     }
 </script>
 </body>
