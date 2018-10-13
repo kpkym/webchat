@@ -19,11 +19,17 @@ public class WebChatWebsocket {
     private String nickName;
 
     @OnOpen
-    public void open(Session session, EndpointConfig config) {
+    public void open(Session session, EndpointConfig config) throws IOException {
         this.wsSession = session;
         HttpSession httpSession = (HttpSession) config.getUserProperties()
                 .get(HttpSession.class.getName());
         this.nickName = (String) httpSession.getAttribute("nickName");
+
+        // 如果没有设置nickName 忽略 || 简单处理
+        if (null == nickName) {
+            session.close();
+            return;
+        }
         WebSocketSessionMap.getWebSocketSessionMap().addSession(this.nickName, this.wsSession);
         log.info("用户: " + this.nickName + ". 建立了一个连接. wsSession id: " + this.wsSession.getId());
     }

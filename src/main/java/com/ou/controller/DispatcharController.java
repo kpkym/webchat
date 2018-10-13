@@ -11,10 +11,16 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 public class DispatcharController {
+
+    @RequestMapping({"/", "/index"})
+    public String index() {
+        return "index";
+    }
+
     @RequestMapping("/webchat")
     public String webChat(HttpSession session) {
         if (null == session.getAttribute("nickName")) {
-            return "redirect:index.jsp";
+            return "redirect:/";
         }
         return "webchat";
     }
