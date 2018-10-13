@@ -19,7 +19,15 @@
 </head>
 <body>
 
-<h3>当前登陆昵称：${nickName}</h3>
+<h3>当前登陆昵称：${nickName} | <button id="autoScroll" type="button" class="btn btn-info">接受消息后自动划到底层
+    <span id="autoScrollStatus">(开启)</span>
+</button></h3>
+
+<div class="col-12 col-md-2">
+
+</div>
+
+<hr>
 
 <div class="container-fluid">
     <div class="row">
@@ -32,11 +40,11 @@
                     <span class="input-group-text" id="inputGroup-sizing-lg">输入框</span>
                 </div>
                 <input id="msgInput" type="text" class="form-control" aria-label="Sizing example input"
-                       aria-describedby="inputGroup-sizing-lg">
+                       aria-describedby="inputGroup-sizing-lg" autofocus>
             </div>
         </div>
         <div class="col-12 col-md-2 offset-md-10">
-            <button id="msgBtn" type="button" class="btn btn-primary btn-lg btn-block" style="display: block;">发送
+            <button id="msgBtn" type="button" class="btn btn-primary btn-lg btn-block"">发送
             </button>
         </div>
     </div>
@@ -53,6 +61,7 @@
     let chatArea = $("#chatArea");
     let ws = new WebSocket("ws://" + location.host + APP_PATH + "/webchat");
     let msgBtn = $("#msgBtn");
+    let isAutoScroll = true;
 
     ws.onmessage = function (event) {
         let data = JSON.parse(event.data);
@@ -63,6 +72,18 @@
     $('#msgInput').keypress(function (e) {
         if (e.which === 13) {
             msgBtn.click();
+        }
+    });
+
+    $("#autoScroll").click(function () {
+        isAutoScroll = !isAutoScroll;
+        $("#autoScroll").removeClass("btn-info btn-danger");
+        if (isAutoScroll) {
+            $("#autoScroll").addClass("btn-info");
+            $("#autoScrollStatus").text("(开启)");
+        } else {
+            $("#autoScroll").addClass("btn-danger");
+            $("#autoScrollStatus").text("(关闭)");
         }
     });
 
@@ -108,6 +129,11 @@
         }
 
         wrapDiv.append(contentAreaDiv).append("<br>").appendTo(chatArea);
+
+        if (isAutoScroll) {
+            // 接受消息 自动划到最下面
+            $('html, body').animate({scrollTop:$(document).height()}, 0);
+        }
     }
 </script>
 </body>
