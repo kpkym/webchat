@@ -56,9 +56,15 @@
 
     ws.onmessage = function (event) {
         let data = JSON.parse(event.data);
-        console.log("接受消息: " + event.data);
         putMsg(data);
     };
+
+    // 在input框输入回车时 触发提交按钮点击事件
+    $('#msgInput').keypress(function (e) {
+        if (e.which === 13) {
+            msgBtn.click();
+        }
+    });
 
     // 当点击提交按钮
     msgBtn.click(function () {
@@ -71,7 +77,6 @@
         }
         ws.send(val);
     });
-
 
     // 如果不是自己发送的消息，文字就在左边，否则移动到右边
     function putMsg(msg) {
@@ -102,7 +107,7 @@
                 msg.nickName + ": </button></div>"));
         }
 
-        wrapDiv.append(contentAreaDiv).append("<br>").appendTo($(chatArea));
+        wrapDiv.append(contentAreaDiv).append("<br>").appendTo(chatArea);
     }
 </script>
 </body>
