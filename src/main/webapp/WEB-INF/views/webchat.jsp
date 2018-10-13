@@ -10,6 +10,11 @@
             display: inline-block;
             margin: 0.2em;
         }
+        .btn {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -18,10 +23,10 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div id="chatArea" class="col-sm-12"></div>
+        <div id="chatArea" class="col-12"></div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
             <div class="input-group input-group-lg">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-lg">输入框</span>
@@ -30,7 +35,7 @@
                        aria-describedby="inputGroup-sizing-lg">
             </div>
         </div>
-        <div class="col-md-2 offset-md-10">
+        <div class="col-12 col-md-2 offset-md-10">
             <button id="msgBtn" type="button" class="btn btn-primary btn-lg btn-block" style="display: block;">发送
             </button>
         </div>
@@ -40,7 +45,7 @@
 <%@ include file="/component/bootjs_jquery.jsp" %>
 <script>
     $(function () {
-        $("body").tooltip({"trigger": "hover", "selector": ".msg"});
+        $("body").tooltip({"trigger": "click hover", "selector": ".msg", "html": true});
     });
 </script>
 
@@ -58,16 +63,26 @@
     // 当点击提交按钮
     msgBtn.click(function () {
         let msgInput = $('#msgInput');
-        ws.send(msgInput.val());
+        let val = msgInput.val().trim();
         msgInput.val("");
+        if (val == "") {
+            layer.msg("不能输入为空");
+            return;
+        }
+        ws.send(val);
     });
 
 
-    // 如果不是自己发送的消息，文字就在左边，否则浮动到右边
+    // 如果不是自己发送的消息，文字就在左边，否则移动到右边
     function putMsg(msg) {
         let date = new Date(msg.date);
-        let wrapDiv = $("<div></div>");
+        let wrapDiv = $("<div class='row'></div>");
+
+        // 聊天气泡
+        let contentAreaDiv = $("<div class='col' style='padding: 0'></div>");
         let contentArea = $("<p class='alert msg alert-auto' data-toggle='tooltip' data-placement='top'></p>");
+        contentArea.text(msg.msg);
+        contentAreaDiv.append(contentArea);
 
         let formateDate = date.getFullYear() + "-"
             + (date.getMonth() + 1) + "-"
@@ -75,17 +90,19 @@
             + date.getHours() + ":"
             + date.getMinutes() + ":"
             + date.getSeconds();
-        contentArea.attr("title", "发送时间：" + formateDate);
+        contentArea.attr("title", "发送人：" + msg.nickName + "<br>发送时间：" + formateDate);
 
         if (msg.nickName === "${nickName}") {
-            contentArea.addClass("alert-primary text-sm-right");
+            contentArea.addClass("alert-primary");
             wrapDiv.css("text-align", "right");
         } else {
             contentArea.addClass("alert-success");
+            // 显示发送信息人的昵称
+            wrapDiv.append($("<div class='col-3 col-sm-2 col-md-1' style='padding: 0'><button class='btn btn-warning btn-lg btn-block disabled'>" +
+                msg.nickName + ": </button></div>"));
         }
 
-        contentArea.text(msg.msg);
-        wrapDiv.append(contentArea).append("<br>").appendTo($(chatArea));
+        wrapDiv.append(contentAreaDiv).append("<br>").appendTo($(chatArea));
     }
 </script>
 </body>

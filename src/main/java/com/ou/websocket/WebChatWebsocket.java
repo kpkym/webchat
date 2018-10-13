@@ -3,6 +3,7 @@ package com.ou.websocket;
 import com.ou.bean.Message;
 import com.ou.util.WebSocketSessionMap;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.*;
@@ -29,6 +30,10 @@ public class WebChatWebsocket {
 
     @OnMessage
     public void message(String msg) throws IOException {
+        // 忽略空字符串
+        if ("".equals(StringUtils.trimWhitespace(msg))) {
+            return;
+        }
         Message message = new Message(this.nickName, msg, new Date());
         WebSocketSessionMap.getWebSocketSessionMap().sentMessage(message, this.nickName);
         log.info("接受用户" + this.nickName + "===>消息: " + msg);
