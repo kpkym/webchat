@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Title</title>
     <%@ include file="/component/bootcss.jsp" %>
     <style>
@@ -12,7 +14,7 @@
 </head>
 <body>
 
-<h3>当前随机标识符：${uid}</h3>
+<h3>当前登陆昵称：${nickName}</h3>
 
 <div class="container-fluid">
     <div class="row">
@@ -75,7 +77,7 @@
             + date.getSeconds();
         contentArea.attr("title", "发送时间：" + formateDate);
 
-        if (msg.uid === ${uid}) {
+        if (msg.nickName === "${nickName}") {
             contentArea.addClass("alert-primary text-sm-right");
             wrapDiv.css("text-align", "right");
         } else {

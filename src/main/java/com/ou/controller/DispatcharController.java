@@ -13,9 +13,8 @@ import javax.servlet.http.HttpSession;
 public class DispatcharController {
     @RequestMapping("/webchat")
     public String webChat(HttpSession session) {
-        // 模拟uid
-        if (null == session.getAttribute("uid")) {
-            session.setAttribute("uid", (int)(Math.random() * 1000000));
+        if (null == session.getAttribute("nickName")) {
+            return "redirect:index.jsp";
         }
         return "webchat";
     }

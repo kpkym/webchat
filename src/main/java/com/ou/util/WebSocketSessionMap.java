@@ -20,7 +20,7 @@ import java.util.Map;
 @Slf4j
 public class WebSocketSessionMap {
     private static WebSocketSessionMap webSocketSessionMap = new WebSocketSessionMap();
-    private Map<Object, Session> sessions = Collections.synchronizedMap(new HashMap<>());
+    private Map<String, Session> sessions = Collections.synchronizedMap(new HashMap<>());
 
     private WebSocketSessionMap(){}
 
@@ -37,24 +37,28 @@ public class WebSocketSessionMap {
      * 添加 session
      * @param wsSession
      */
-    public void addSession(Object uid, Session wsSession) {
-        sessions.put(uid, wsSession);
+    public void addSession(String nickName, Session wsSession) {
+        sessions.put(nickName, wsSession);
     }
 
     /**
      * 删除 session
-     * @param uid
+     * @param nickName
      */
-    public void delSession(Object uid) {
-        sessions.remove(uid);
+    public void delSession(String nickName) {
+        sessions.remove(nickName);
     }
 
-    public void sentMessage(Message message, Object uid) throws IOException {
-        Iterator<Map.Entry<Object, Session>> iterator = this.sessions.entrySet().iterator();
+    public boolean hasNickName(String nickName) {
+        return sessions.containsKey(nickName);
+    }
+
+    public void sentMessage(Message message, String nickName) throws IOException {
+        Iterator<Map.Entry<String, Session>> iterator = this.sessions.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<Object, Session> next = iterator.next();
+            Map.Entry<String, Session> next = iterator.next();
             next.getValue().getBasicRemote().sendText(JSON.toJSONString(message));
         }
-        log.info("发送用户" + uid + "===>消息: " + message + ". 成功");
+        log.info("发送用户" + nickName + "===>消息: " + message + ". 成功");
     }
 }

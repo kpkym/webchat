@@ -1,8 +1,9 @@
 package com.ou.bean;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 
@@ -12,9 +13,10 @@ import java.util.Date;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Message {
-    private Object uid;
-    private String msg;
-    private Date date;
+    private String id;
+    private @NonNull String nickName;
+    private @NonNull String msg;
+    private @NonNull Date date;
 }
