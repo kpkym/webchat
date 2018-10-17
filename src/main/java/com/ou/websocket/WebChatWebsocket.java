@@ -50,4 +50,9 @@ public class WebChatWebsocket {
         WebSocketSessionMap.getWebSocketSessionMap().delSession(this.nickName);
         log.info("用户: " + this.nickName + ". 断开了连接. wsSession id: " + this.wsSession.getId());
     }
+
+    @OnError
+    public void error(Throwable e) {
+        log.info("出错：" + e.toString());
+    }
 }
