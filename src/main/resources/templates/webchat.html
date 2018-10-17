@@ -1,15 +1,16 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
-<html>
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Title</title>
-    <%@ include file="/component/bootcss.jsp" %>
+    <div th:replace="~{/component/commoncss :: css}"></div>
     <style>
         .alert-auto {
             display: inline-block;
             margin: 0.2em;
         }
+
         .btn {
             overflow: hidden;
             text-overflow: ellipsis;
@@ -19,15 +20,17 @@
 </head>
 <body>
 
-<h3>当前登陆昵称：${nickName} | <button id="autoScroll" type="button" class="btn btn-info">接受消息后自动划到底层
-    <span id="autoScrollStatus">(开启)</span>
-</button></h3>
+<h3>当前登陆昵称：<span style="color: #ff7e2e;" th:text="${session.nickName}">nickName</span>
+    <button id="autoScroll" type="button" class="btn btn-info">
+        接受消息后自动划到底层<span id="autoScrollStatus">(开启)</span>
+    </button>
+</h3>
 
 <div class="col-12 col-md-2">
 
 </div>
 
-<hr>
+<hr/>
 
 <div class="container-fluid">
     <div class="row">
@@ -44,13 +47,13 @@
             </div>
         </div>
         <div class="col-12 col-md-2 offset-md-10">
-            <button id="msgBtn" type="button" class="btn btn-primary btn-lg btn-block"">发送
-            </button>
+            <button id="msgBtn" type="button" class="btn btn-primary btn-lg btn-block">发送</button>
         </div>
     </div>
 </div>
 
-<%@ include file="/component/bootjs_jquery.jsp" %>
+<div th:replace="~{/component/commonjs :: js}"></div>
+
 <script>
     $(function () {
         $("body").tooltip({"trigger": "click hover", "selector": ".msg", "html": true});
@@ -59,7 +62,7 @@
 
 <script>
     let chatArea = $("#chatArea");
-    let ws = new WebSocket("ws://" + location.host + APP_PATH + "/webchat");
+    let ws = new WebSocket("ws://" + location.host + "[[${#request.getContextPath()}]]" + "/webchat");
     let msgBtn = $("#msgBtn");
     let isAutoScroll = true;
 
@@ -118,7 +121,7 @@
             + date.getSeconds();
         contentArea.attr("title", "发送人：" + msg.nickName + "<br>发送时间：" + formateDate);
 
-        if (msg.nickName === "${nickName}") {
+        if (msg.nickName === "[[${session.nickName}]]") {
             contentArea.addClass("alert-primary");
             wrapDiv.css("text-align", "right");
         } else {
@@ -132,7 +135,7 @@
 
         if (isAutoScroll) {
             // 接受消息 自动划到最下面
-            $('html, body').animate({scrollTop:$(document).height()}, 0);
+            $('html, body').animate({scrollTop: $(document).height()}, 0);
         }
     }
 </script>
