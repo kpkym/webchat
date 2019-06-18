@@ -3,6 +3,7 @@ package com.ou.websocket;
 import com.ou.bean.Message;
 import com.ou.util.WebSocketSessionMap;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
@@ -13,6 +14,7 @@ import java.util.Date;
 
 
 @Slf4j
+@Component
 @ServerEndpoint(value = "/webchat", configurator = GetHttpSessionConfigurator.class)
 public class WebChatWebsocket {
     private Session wsSession;
